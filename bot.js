@@ -31,6 +31,7 @@ const setup = (db) => {
 
   // actions
   bot.action("addBinancePool", addBinancePool);
+  bot.action("updateBinancePool", binance);
 
   return bot;
 };
