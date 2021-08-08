@@ -1,40 +1,50 @@
-const { Telegraf } = require("telegraf");
+const { Telegraf, Markup } = require("telegraf");
 const { session } = require("telegraf-session-mongodb");
+const { start } = require("./commands/start");
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const token = process.env.BOT_TOKEN;
+if (token === undefined) {
+  throw new Error("BOT_TOKEN must be provided!");
+}
+
+const bot = new Telegraf(token);
 
 const setup = (db) => {
   // session middleware MUST be initialized
   // before any commands or actions that require sessions
   bot.use(session(db));
+  bot.use(Telegraf.log());
 
-  bot.command("/increment", async (ctx) => {
-    const count = (ctx.session.count || 0) + 1;
+  bot.start(start);
 
-    await ctx.reply(`Count: ${count}`);
+  //   bot.command("/increment", async (ctx) => {
+  //     const count = (ctx.session.count || 0) + 1;
 
-    ctx.session.count = count;
-  });
+  //     await ctx.reply(`Count: ${count}`);
 
-  bot.command("/callback", async (ctx) => {
-    await ctx.reply("Inline keyboard with callback", {
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: "Increment", callback_data: "increment_counter" }],
-        ],
-      },
-    });
-  });
+  //     ctx.session.count = count;
+  //   });
 
-  bot.on("callback_query", async (ctx) => {
-    const count = (ctx.session.count || 0) + 1;
+  //   bot.command("/callback", async (ctx) => {
+  //     await ctx.reply("Inline keyboard with callback", {
+  //       reply_markup: {
+  //         inline_keyboard: [
+  //           [{ text: "Increment", callback_data: "increment_counter" }],
+  //         ],
+  //       },
+  //     });
+  //   });
 
-    console.log(`Callback Query ${ctx.from.id}: ${count}`);
+  //   bot.on("callback_query", async (ctx) => {
+  //     const count = (ctx.session.count || 0) + 1;
 
-    await ctx.answerCbQuery();
+  //     // editMessageText
+  //     // console.log(`Callback Query ${ctx.from.id}: ${count}`);
 
-    ctx.session.count = count;
-  });
+  //     await ctx.answerCbQuery();
+
+  //     ctx.session.count = count;
+  //   });
 
   return bot;
 };
