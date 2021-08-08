@@ -11,6 +11,12 @@ const {
   removeBinancePool,
   removeBinancePoolWizard,
 } = require("./actions/removeBinancePool");
+const { xmr } = require("./commands/xmr");
+const { addXmrPool, addXmrPoolWizard } = require("./actions/addXmrPool");
+const {
+  removeXmrPool,
+  removeXmrPoolWizard,
+} = require("./actions/removeXmrPool");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -27,6 +33,8 @@ const setup = (db) => {
   const stage = new Scenes.Stage([
     addBinancePoolWizard,
     removeBinancePoolWizard,
+    addXmrPoolWizard,
+    removeXmrPoolWizard,
   ]);
 
   bot.use(stage.middleware());
@@ -35,11 +43,16 @@ const setup = (db) => {
   bot.start(start);
   bot.hears("Help", help);
   bot.hears("Binance Pool", binance);
+  bot.hears("XMR Pool", xmr);
 
   // actions
   bot.action("addBinancePool", addBinancePool);
   bot.action("removeBinancePool", removeBinancePool);
   bot.action("updateBinancePool", binance);
+
+  bot.action("addXmrPool", addXmrPool);
+  bot.action("removeXmrPool", removeXmrPool);
+  bot.action("updateXmrPool", xmr);
 
   return bot;
 };

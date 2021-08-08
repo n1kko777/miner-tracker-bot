@@ -3,6 +3,8 @@ const { Markup } = require("telegraf");
 const start = async (ctx) => {
   if (!ctx.session.bio) {
     ctx.session.bio = ctx.message.from;
+    ctx.session.binance = [];
+    ctx.session.xmr = [];
   }
 
   return await ctx.reply(

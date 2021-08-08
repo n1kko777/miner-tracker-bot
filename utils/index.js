@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const fetchData = (URL) => {
+const fetchBinancePoolData = (URL) => {
   return axios
     .get(URL)
     .then((response) => {
@@ -14,8 +14,26 @@ const fetchData = (URL) => {
     });
 };
 
-const getAllData = (URLs) => {
-  return Promise.all(URLs.map(fetchData));
+const getAllBinancePoolData = (URLs) => {
+  return Promise.all(URLs.map(fetchBinancePoolData));
+};
+
+const fetchXmrPoolData = (URL) => {
+  return axios
+    .get(URL)
+    .then((response) => {
+      return {
+        success: true,
+        data: response.data.stats,
+      };
+    })
+    .catch(() => {
+      return { success: false };
+    });
+};
+
+const getAllXmrPoolData = (URLs) => {
+  return Promise.all(URLs.map(fetchXmrPoolData));
 };
 
 const formatHash = (a, b = 2, k = 1000) => {
@@ -30,4 +48,11 @@ const formatHash = (a, b = 2, k = 1000) => {
   }
 };
 
-module.exports = { getAllData, formatHash };
+const formatXmrValue = (xmrValue) => parseFloat(xmrValue) / 1000000000000;
+
+module.exports = {
+  getAllBinancePoolData,
+  getAllXmrPoolData,
+  formatHash,
+  formatXmrValue,
+};
