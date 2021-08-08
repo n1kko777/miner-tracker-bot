@@ -1,13 +1,20 @@
 const { Scenes } = require("telegraf");
-const axios = require("axios");
 const { binance } = require("../commands/binance");
 
-const addBinancePoolWizard = new Scenes.WizardScene(
-  "add-binance-pool",
+const removeBinancePoolWizard = new Scenes.WizardScene(
+  "remove-binance-pool",
   async (ctx) => {
-    await ctx.reply(
-      "Send me binance pool 'Watcher Link'\n\nor type 'cancel' to leave"
-    );
+    const binancePools = ctx?.session?.binance || [];
+
+    if (binancePools.length) {
+      await ctx.reply(
+        "Send me binance pool 'Watcher Link'\n\nor type 'cancel' to leave"
+      );
+    } else {
+      await ctx.reply("No pool to delete");
+
+      return ctx.scene.leave();
+    }
 
     return ctx.wizard.next();
   },
@@ -25,25 +32,16 @@ const addBinancePoolWizard = new Scenes.WizardScene(
     try {
       const binancePools = ctx?.session?.binance || [];
 
-      const newToken = poolLink.split("urlParams=")[1];
+      const deleteToken = poolLink.split("urlParams=")[1];
 
-      if (!newToken) {
+      if (!deleteToken) {
         throw new Error("Link is incorrect or can't access data");
       }
 
-      if (binancePools.includes(newToken)) {
-        throw new Error("Link already exist");
-      }
-
-      const res = await axios.get(
-        `https://pool.binance.com/mining-api/v1/public/pool/stat?observerToken=${newToken}`
-      );
-
-      if (res.status === 200 && res.data.data) {
-        binancePools.push(newToken);
-        ctx.session.binance = binancePools;
+      if (binancePools.includes(deleteToken)) {
+        ctx.session.binance = binancePools.filter((el) => el !== deleteToken);
       } else {
-        throw new Error("Link is incorrect or can't access data");
+        throw new Error("No link was found");
       }
     } catch (error) {
       ctx.deleteMessage(message_id);
@@ -60,12 +58,12 @@ const addBinancePoolWizard = new Scenes.WizardScene(
   }
 );
 
-const addBinancePool = async (ctx) => {
+const removeBinancePool = async (ctx) => {
   await ctx.answerCbQuery();
-  return ctx.scene.enter("add-binance-pool");
+  return ctx.scene.enter("remove-binance-pool");
 };
 
 module.exports = {
-  addBinancePool,
-  addBinancePoolWizard,
+  removeBinancePool,
+  removeBinancePoolWizard,
 };

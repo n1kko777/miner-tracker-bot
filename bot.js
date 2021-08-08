@@ -7,6 +7,10 @@ const {
   addBinancePool,
   addBinancePoolWizard,
 } = require("./actions/addBinancePool");
+const {
+  removeBinancePool,
+  removeBinancePoolWizard,
+} = require("./actions/removeBinancePool");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -20,7 +24,10 @@ const setup = (db) => {
   // before any commands or actions that require sessions
   bot.use(session(db));
 
-  const stage = new Scenes.Stage([addBinancePoolWizard]);
+  const stage = new Scenes.Stage([
+    addBinancePoolWizard,
+    removeBinancePoolWizard,
+  ]);
 
   bot.use(stage.middleware());
   bot.use(Telegraf.log());
@@ -31,6 +38,7 @@ const setup = (db) => {
 
   // actions
   bot.action("addBinancePool", addBinancePool);
+  bot.action("removeBinancePool", removeBinancePool);
   bot.action("updateBinancePool", binance);
 
   return bot;

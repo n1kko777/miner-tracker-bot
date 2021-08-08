@@ -6,11 +6,12 @@ const inlineButtonConfig = {
   ...Markup.inlineKeyboard([
     [Markup.button.callback("Update", "updateBinancePool")],
     [Markup.button.callback("Add Pool", "addBinancePool")],
+    [Markup.button.callback("Remove Pool", "removeBinancePool")],
   ]),
 };
 
 const binance = async (ctx) => {
-  if (!ctx.session.binance) {
+  if (!ctx.session.binance || !ctx.session.binance.length) {
     return await ctx.reply(
       "<b>Binance Pool</b>\n\nNo data to view...",
       inlineButtonConfig
