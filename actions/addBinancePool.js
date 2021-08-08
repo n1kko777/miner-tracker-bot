@@ -35,7 +35,7 @@ const addBinancePoolWizard = new Scenes.WizardScene(
       }
 
       const res = await axios.get(
-        `https://pool.binance.com/mining-api/v1/public/pool/stat?observerToken=${newToken}`
+        `https://pool.binance.com/mining-api/v1/public/pool/miner/index?groupId=-2&observerToken=${newToken}&pageIndex=1&searchWorkerName=&sort=0&sortColumn=1&workerStatus=0&pageSize=20`
       );
 
       if (res.status === 200 && res.data.data) {
