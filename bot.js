@@ -1,6 +1,7 @@
 const { Telegraf, Markup } = require("telegraf");
 const { session } = require("telegraf-session-mongodb");
 const { start } = require("./commands/start");
+const { help } = require("./commands/help");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -16,6 +17,7 @@ const setup = (db) => {
   bot.use(Telegraf.log());
 
   bot.start(start);
+  bot.hears("Help", help);
 
   //   bot.command("/increment", async (ctx) => {
   //     const count = (ctx.session.count || 0) + 1;
