@@ -10,18 +10,11 @@ const inlineButtonConfig = {
   ]),
 };
 
-const binance = async (ctx) => {
-  if (!ctx.session.binance || !ctx.session.binance.length) {
-    return await ctx.reply(
-      "<b>Binance Pool</b>\n\nNo data to view...",
-      inlineButtonConfig
-    );
-  }
-
+const fetchAllBinancePoolData = async (binancePools = []) => {
   const avaiablePools = [];
 
   await getAllBinancePoolData(
-    ctx.session.binance.map(
+    binancePools.map(
       (el) =>
         `https://pool.binance.com/mining-api/v1/public/pool/stat?observerToken=${el}`
     )
@@ -73,6 +66,19 @@ Profit Yesterday: ${profitYesterdayText}
       console.log(e);
     });
 
+  return avaiablePools;
+};
+
+const binance = async (ctx) => {
+  if (!ctx.session.binance || !ctx.session.binance.length) {
+    return await ctx.reply(
+      "<b>Binance Pool</b>\n\nNo data to view...",
+      inlineButtonConfig
+    );
+  }
+
+  const avaiablePools = await fetchAllBinancePoolData(ctx.session.binance);
+
   return await ctx.reply(
     `<b>Binance Pool</b>\n${avaiablePools.join("\n=====================\n")}`,
     inlineButtonConfig
@@ -81,4 +87,5 @@ Profit Yesterday: ${profitYesterdayText}
 
 module.exports = {
   binance,
+  fetchAllBinancePoolData,
 };

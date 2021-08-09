@@ -10,18 +10,11 @@ const inlineButtonConfig = {
   ]),
 };
 
-const xmr = async (ctx) => {
-  if (!ctx.session.xmr || !ctx.session.xmr.length) {
-    return await ctx.reply(
-      "<b>XMR Pool</b>\n\nNo data to view...",
-      inlineButtonConfig
-    );
-  }
-
+const fetchAllXmrPoolData = async (xmrPools) => {
   const avaiablePools = [];
 
   await getAllXmrPoolData(
-    ctx.session.xmr.map(
+    xmrPools.map(
       (el) => `https://web.xmrpool.eu:8119/stats_address?address=${el}`
     )
   )
@@ -41,6 +34,19 @@ Hash Rate: ${hashrate}/s
       console.log(e);
     });
 
+  return avaiablePools;
+};
+
+const xmr = async (ctx) => {
+  if (!ctx.session.xmr || !ctx.session.xmr.length) {
+    return await ctx.reply(
+      "<b>XMR Pool</b>\n\nNo data to view...",
+      inlineButtonConfig
+    );
+  }
+
+  const avaiablePools = await fetchAllXmrPoolData(ctx.session.xmr);
+
   return await ctx.reply(
     `<b>XMR Pool</b>\n${avaiablePools.join("\n=====================\n")}`,
     inlineButtonConfig
@@ -49,4 +55,5 @@ Hash Rate: ${hashrate}/s
 
 module.exports = {
   xmr,
+  fetchAllXmrPoolData,
 };

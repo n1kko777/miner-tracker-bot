@@ -17,6 +17,7 @@ const {
   removeXmrPool,
   removeXmrPoolWizard,
 } = require("./actions/removeXmrPool");
+const { dashboard } = require("./commands/dashboard");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -44,6 +45,7 @@ const setup = (db) => {
   bot.hears("Help", help);
   bot.hears("Binance Pool", binance);
   bot.hears("XMR Pool", xmr);
+  bot.hears("Dashboard", dashboard);
 
   // actions
   bot.action("addBinancePool", addBinancePool);
@@ -53,6 +55,8 @@ const setup = (db) => {
   bot.action("addXmrPool", addXmrPool);
   bot.action("removeXmrPool", removeXmrPool);
   bot.action("updateXmrPool", xmr);
+
+  bot.action("updateDashboard", dashboard);
 
   return bot;
 };
