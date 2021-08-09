@@ -69,6 +69,36 @@ Profit Yesterday: ${profitYesterdayText}
   return avaiablePools;
 };
 
+const fetchAllBinanceWorkerDatas = async (binancePools = []) => {
+  const avaiablePools = [];
+
+  await getAllBinancePoolData(
+    binancePools.map(
+      (el) =>
+        `https://pool.binance.com/mining-api/v1/public/pool/miner/index?groupId=-2&observerToken=${el}&pageIndex=1&searchWorkerName=&sort=0&sortColumn=1&workerStatus=0&pageSize=20`
+    )
+  )
+    .then((resp) => {
+      resp
+        .filter((el) => el.success)
+        .forEach(({ data: { workerDatas } }) => {
+          workerDatas.forEach(
+            ({ status, workerName, hashRate, dayHashRate, lastShareTime }) => {
+              avaiablePools.push(`${signal[status]} <b>${workerName}</b>
+Real-Hashrate: ${formatHash(parseFloat(hashRate))}
+Day-Hashrate: ${formatHash(parseFloat(dayHashRate))}
+Last share time: ${new Date(lastShareTime)}`);
+            }
+          );
+        });
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  return avaiablePools;
+};
+
 const binance = async (ctx) => {
   if (!ctx.session.binance || !ctx.session.binance.length) {
     return await ctx.reply(
