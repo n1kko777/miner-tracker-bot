@@ -21,11 +21,12 @@ const dashboard = async (ctx) => {
       inlineButtonConfig
     );
   }
-
+  const { message_id } = await ctx.reply("Getting data...");
   const binancePools = await fetchAllBinancePoolData(ctx.session.binance);
 
   const xmrPools = await fetchAllXmrPoolData(ctx.session.xmr);
 
+  ctx.deleteMessage(message_id);
   return await ctx.reply(
     `<b>Dashboard</b>\n\n<b>Binance Pool</b>${
       binancePools?.length

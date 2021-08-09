@@ -44,9 +44,10 @@ const xmr = async (ctx) => {
       inlineButtonConfig
     );
   }
-
+  const { message_id } = await ctx.reply("Getting data...");
   const avaiablePools = await fetchAllXmrPoolData(ctx.session.xmr);
 
+  ctx.deleteMessage(message_id);
   return await ctx.reply(
     `<b>XMR Pool</b>\n${avaiablePools.join("\n=====================\n")}`,
     inlineButtonConfig

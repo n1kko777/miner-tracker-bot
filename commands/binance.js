@@ -77,8 +77,10 @@ const binance = async (ctx) => {
     );
   }
 
+  const { message_id } = await ctx.reply("Getting data...");
   const avaiablePools = await fetchAllBinancePoolData(ctx.session.binance);
 
+  ctx.deleteMessage(message_id);
   return await ctx.reply(
     `<b>Binance Pool</b>\n${avaiablePools.join("\n=====================\n")}`,
     inlineButtonConfig
