@@ -70,6 +70,13 @@ Profit Yesterday: ${profitYesterdayText}
 };
 
 const fetchAllBinanceWorkerDatas = async (binancePools = []) => {
+  const signal = {
+    0: "",
+    1: "🟢",
+    2: "🔴",
+    3: "️⚪",
+  };
+
   const avaiablePools = [];
 
   await getAllBinancePoolData(
