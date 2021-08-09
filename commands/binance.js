@@ -91,7 +91,7 @@ const fetchAllBinanceWorkerDatas = async (binancePools = []) => {
         .forEach(({ data: { workerDatas } }) => {
           workerDatas.forEach(
             ({ status, workerName, hashRate, dayHashRate, lastShareTime }) => {
-              avaiablePools.push(`${signal[status]} <b>${workerName}</b>
+              avaiablePools.push(`\n${signal[status]} <b>${workerName}</b>
 Real-Hashrate: ${formatHash(parseFloat(hashRate))}
 Day-Hashrate: ${formatHash(parseFloat(dayHashRate))}
 Last share time: ${new Date(lastShareTime)}`);
