@@ -35,11 +35,13 @@ const addXmrPoolWizard = new Scenes.WizardScene(
 
       const res = await axios.get(poolLink);
 
-      if (res.status === 200 && res.data) {
+      if (res.status === 200 && res.data && !res.data.error) {
         xmrPools.push(newAddress);
         ctx.session.xmr = xmrPools;
       } else {
-        throw new Error("Address is incorrect or can't access data");
+        throw new Error(
+          res?.data?.error || "Address is incorrect or can't access data"
+        );
       }
     } catch (error) {
       ctx.deleteMessage(message_id);
