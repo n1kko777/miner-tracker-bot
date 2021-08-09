@@ -108,7 +108,7 @@ const binance = async (ctx) => {
   }
 
   const { message_id } = await ctx.reply("Getting data...");
-  const avaiablePools = await fetchAllBinancePoolData(ctx.session.binance);
+  const avaiablePools = await fetchAllBinanceWorkerDatas(ctx.session.binance);
 
   ctx.deleteMessage(message_id);
   return await ctx.reply(
@@ -120,4 +120,5 @@ const binance = async (ctx) => {
 module.exports = {
   binance,
   fetchAllBinancePoolData,
+  fetchAllBinanceWorkerDatas,
 };
