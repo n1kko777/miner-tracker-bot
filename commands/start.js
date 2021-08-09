@@ -8,7 +8,13 @@ const start = async (ctx) => {
   }
 
   return await ctx.reply(
-    "Description coming soon...",
+    `Bot help you track your mining Binance and Xmr pool.
+
+Register on the Binance Pool and get lifetime Cashback of 20%, only when registering via the link:
+https://accounts.binance.com/ru/register?ref=BYJ46M9G
+
+Buy me a coffee:
+https://www.buymeacoffee.com/n1kko777`,
     Markup.keyboard([["Dashboard"], ["Binance Pool", "XMR Pool"], ["Help"]])
       .oneTime()
       .resize()
