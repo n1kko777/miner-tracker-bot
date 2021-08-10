@@ -89,7 +89,7 @@ const xmr = async (ctx) => {
     );
   }
   const { message_id } = await ctx.reply("Getting data...");
-  const avaiablePools = await fetchAllXmrPoolData(ctx.session.xmr);
+  const avaiablePools = await fetchAllXmrWorkerDatas(ctx.session.xmr);
 
   ctx.deleteMessage(message_id);
   return await ctx.reply(
