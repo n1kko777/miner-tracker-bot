@@ -54,25 +54,18 @@ const fetchAllXmrWorkerDatas = async (xmrPools) => {
     .then((resp) => {
       resp
         .filter((el) => el.success)
-        .forEach(
-          ({
-            data: {
-              perWorkerStats: {
-                workerId,
-                hashrate,
-                hashes,
-                lastShare,
-                expired,
-              },
-            },
-          }) => {
-            avaiablePools.push(`
-${hashrate ? "🟢" : "🔴"} <b>${workerId}</b>
+        .forEach(({ data }) => {
+          data.perWorkerStats.forEach(
+            ({ workerId, hashrate, hashes, lastShare, expired }) => {
+              avaiablePools.push(`
+              ${hashrate ? "🟢" : "🔴"} <b>${workerId}</b>
 Hash Rate: ${hashrate || "0 H"}/s
-Last share time: ${lastShare ? new Date(parseInt(lastShare) * 1000) : "Never"}
-              `);
-          }
-        );
+Last share time: ${
+                lastShare ? new Date(parseInt(lastShare) * 1000) : "Never"
+              }`);
+            }
+          );
+        });
     })
     .catch((e) => {
       console.log(e);
