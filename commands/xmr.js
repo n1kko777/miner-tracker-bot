@@ -57,8 +57,7 @@ const fetchAllXmrWorkerDatas = async (xmrPools) => {
         .forEach(({ data }) => {
           data.perWorkerStats.forEach(
             ({ workerId, hashrate, hashes, lastShare, expired }) => {
-              avaiablePools.push(`
-              ${hashrate ? "🟢" : "🔴"} <b>${workerId}</b>
+              avaiablePools.push(`${hashrate ? "🟢" : "🔴"} <b>${workerId}</b>
 Hash Rate: ${hashrate || "0 H"}/s
 Last share time: ${
                 lastShare ? new Date(parseInt(lastShare) * 1000) : "Never"
