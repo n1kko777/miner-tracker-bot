@@ -21,14 +21,58 @@ const fetchAllXmrPoolData = async (xmrPools) => {
     .then((resp) => {
       resp
         .filter((el) => el.success)
-        .forEach(({ data: { balance, last_reward, paid, hashrate } }) => {
-          avaiablePools.push(`
+        .forEach(
+          ({
+            data: {
+              stats: { balance, last_reward, paid, hashrate },
+            },
+          }) => {
+            avaiablePools.push(`
 Pending Balance: ${formatXmrValue(balance)} XMR
 Last Block Reward: ${formatXmrValue(last_reward)} XMR
 Total Paid: ${formatXmrValue(paid)} XMR
-Hash Rate: ${hashrate}/s
+Hash Rate: ${hashrate || "0 H"}/s
               `);
-        });
+          }
+        );
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  return avaiablePools;
+};
+
+const fetchAllXmrWorkerDatas = async (xmrPools) => {
+  const avaiablePools = [];
+
+  await getAllXmrPoolData(
+    xmrPools.map(
+      (el) => `https://web.xmrpool.eu:8119/stats_address?address=${el}`
+    )
+  )
+    .then((resp) => {
+      resp
+        .filter((el) => el.success)
+        .forEach(
+          ({
+            data: {
+              perWorkerStats: {
+                workerId,
+                hashrate,
+                hashes,
+                lastShare,
+                expired,
+              },
+            },
+          }) => {
+            avaiablePools.push(`
+${hashrate ? "🟢" : "🔴"} <b>${workerId}</b>
+Hash Rate: ${hashrate || "0 H"}/s
+Last share time: ${lastShare ? new Date(parseInt(lastShare) * 1000) : "Never"}
+              `);
+          }
+        );
     })
     .catch((e) => {
       console.log(e);
@@ -57,4 +101,5 @@ const xmr = async (ctx) => {
 module.exports = {
   xmr,
   fetchAllXmrPoolData,
+  fetchAllXmrWorkerDatas,
 };
