@@ -15,9 +15,11 @@ https://accounts.binance.com/ru/register?ref=BYJ46M9G
 
 Buy me a coffee:
 https://www.buymeacoffee.com/n1kko777`,
-    Markup.keyboard([["Dashboard"], ["Binance Pool", "XMR Pool"], ["Help"]])
-      .oneTime()
-      .resize()
+    Markup.keyboard([
+      ["Dashboard"],
+      ["Binance Pool", "XMR Pool"],
+      ["Help"],
+    ]).resize()
   );
 };
 
