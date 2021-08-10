@@ -29,7 +29,7 @@ const fetchAllXmrPoolData = async (xmrPools) => {
           }) => {
             avaiablePools.push(`
 Pending Balance: ${formatXmrValue(balance)} XMR
-Last Block Reward: ${formatXmrValue(last_reward)} XMR
+
 Total Paid: ${formatXmrValue(paid)} XMR
 Hash Rate: ${hashrate || "0 H"}/s
               `);
