@@ -5,6 +5,9 @@ const start = async (ctx) => {
     ctx.session.bio = ctx.message.from;
     ctx.session.binance = [];
     ctx.session.xmr = [];
+    ctx.session.settings = {
+      tz: "00:00",
+    };
   }
 
   return await ctx.reply(
@@ -18,7 +21,7 @@ https://www.buymeacoffee.com/n1kko777`,
     Markup.keyboard([
       ["Dashboard"],
       ["Binance Pool", "XMR Pool"],
-      ["Help"],
+      ["Settings", "Help"],
     ]).resize()
   );
 };

@@ -1,6 +1,7 @@
 const { Telegraf, Scenes } = require("telegraf");
 const { session } = require("telegraf-session-mongodb");
 const { start } = require("./commands/start");
+const { settings } = require("./commands/settings");
 const { help } = require("./commands/help");
 const { binance } = require("./commands/binance");
 const {
@@ -18,6 +19,7 @@ const {
   removeXmrPoolWizard,
 } = require("./actions/removeXmrPool");
 const { dashboard } = require("./commands/dashboard");
+const { setTimeZone, setTimeZoneWizard } = require("./actions/setTimeZone");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -36,6 +38,7 @@ const setup = (db) => {
     removeBinancePoolWizard,
     addXmrPoolWizard,
     removeXmrPoolWizard,
+    setTimeZoneWizard,
   ]);
 
   bot.use(stage.middleware());
@@ -46,6 +49,7 @@ const setup = (db) => {
   bot.hears("Binance Pool", binance);
   bot.hears("XMR Pool", xmr);
   bot.hears("Dashboard", dashboard);
+  bot.hears("Settings", settings);
 
   // actions
   bot.action("addBinancePool", addBinancePool);
@@ -57,6 +61,8 @@ const setup = (db) => {
   bot.action("updateXmrPool", xmr);
 
   bot.action("updateDashboard", dashboard);
+
+  bot.action("setTimeZone", setTimeZone);
 
   return bot;
 };

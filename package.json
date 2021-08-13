@@ -11,11 +11,13 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
+    "dateformat": "^4.5.1",
     "dotenv": "^10.0.0",
     "mongodb": "^3.6.10",
     "nodemon": "^2.0.12",
     "telegraf": "^4.4.1",
-    "telegraf-session-mongodb": "^2.0.2"
+    "telegraf-session-mongodb": "^2.0.2",
+    "timezones-list": "^3.0.1"
   },
   "engines": {
     "node": "15.x"
