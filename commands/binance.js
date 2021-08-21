@@ -1,3 +1,4 @@
+const moment = require("moment");
 const { Markup } = require("telegraf");
 const { getAllBinancePoolData, formatHash } = require("../utils");
 
@@ -69,7 +70,7 @@ Profit Yesterday: ${profitYesterdayText}
   return avaiablePools;
 };
 
-const fetchAllBinanceWorkerDatas = async (binancePools = []) => {
+const fetchAllBinanceWorkerDatas = async (binancePools = [], tz) => {
   const signal = {
     0: "",
     1: "🟢",
@@ -94,7 +95,7 @@ const fetchAllBinanceWorkerDatas = async (binancePools = []) => {
               avaiablePools.push(`\n${signal[status]} <b>${workerName}</b>
 Real-Hashrate: ${formatHash(parseFloat(hashRate))}
 Day-Hashrate: ${formatHash(parseFloat(dayHashRate))}
-Last share time: ${new Date(lastShareTime)}`);
+Last share time: ${moment(new Date(lastShareTime)).zone(tz)}`);
             }
           );
         });
@@ -115,7 +116,10 @@ const binance = async (ctx) => {
   }
 
   const { message_id } = await ctx.reply("Getting data...");
-  const avaiablePools = await fetchAllBinanceWorkerDatas(ctx.session.binance);
+  const avaiablePools = await fetchAllBinanceWorkerDatas(
+    ctx.session.binance,
+    ctx.session.settings.tz
+  );
 
   ctx.deleteMessage(message_id);
   return await ctx.reply(

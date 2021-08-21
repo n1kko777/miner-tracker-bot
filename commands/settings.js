@@ -9,7 +9,7 @@ const inlineButtonConfig = {
 
 const settings = async (ctx) => {
   return await ctx.reply(
-    `<b>Settings</b>\n\nTime Zone: ${ctx?.session?.settings?.tz || "00:00"}`,
+    `<b>Settings</b>\n\nTime Zone: ${ctx?.session?.settings?.tz || "+00:00"}`,
     inlineButtonConfig
   );
 };

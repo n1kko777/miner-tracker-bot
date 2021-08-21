@@ -6,7 +6,7 @@ const start = async (ctx) => {
     ctx.session.binance = [];
     ctx.session.xmr = [];
     ctx.session.settings = {
-      tz: "00:00",
+      tz: "+00:00",
     };
   }
 

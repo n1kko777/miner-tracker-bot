@@ -1,3 +1,4 @@
+const moment = require("moment");
 const { Markup } = require("telegraf");
 const { getAllXmrPoolData, formatXmrValue } = require("../utils");
 
@@ -29,7 +30,6 @@ const fetchAllXmrPoolData = async (xmrPools) => {
           }) => {
             avaiablePools.push(`
 Pending Balance: ${formatXmrValue(balance)} XMR
-
 Total Paid: ${formatXmrValue(paid)} XMR
 Hash Rate: ${hashrate || "0 H"}/s
               `);
@@ -43,7 +43,7 @@ Hash Rate: ${hashrate || "0 H"}/s
   return avaiablePools;
 };
 
-const fetchAllXmrWorkerDatas = async (xmrPools) => {
+const fetchAllXmrWorkerDatas = async (xmrPools = [], tz) => {
   const avaiablePools = [];
 
   await getAllXmrPoolData(
@@ -60,7 +60,9 @@ const fetchAllXmrWorkerDatas = async (xmrPools) => {
               avaiablePools.push(`${hashrate ? "🟢" : "🔴"} <b>${workerId}</b>
 Hash Rate: ${hashrate || "0 H"}/s
 Last share time: ${
-                lastShare ? new Date(parseInt(lastShare) * 1000) : "Never"
+                lastShare
+                  ? moment(new Date(parseInt(lastShare) * 1000)).zone(tz)
+                  : "Never"
               }`);
             }
           );
@@ -81,7 +83,10 @@ const xmr = async (ctx) => {
     );
   }
   const { message_id } = await ctx.reply("Getting data...");
-  const avaiablePools = await fetchAllXmrWorkerDatas(ctx.session.xmr);
+  const avaiablePools = await fetchAllXmrWorkerDatas(
+    ctx.session.xmr,
+    ctx.session.settings.tz
+  );
 
   ctx.deleteMessage(message_id);
   return await ctx.reply(

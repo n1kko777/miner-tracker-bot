@@ -1,41 +1,18 @@
-const { Scenes, Markup, Composer } = require("telegraf");
-const timezones = require("timezones-list");
-
-const stepHandler = new Composer();
-stepHandler.action("selectTimeZone", async (ctx) => {
-  await ctx.reply("Time zone was successfully update.");
-
-  return ctx.scene.leave();
-});
+const { Scenes } = require("telegraf");
+const { settings } = require("../commands/settings");
 
 const setTimeZoneWizard = new Scenes.WizardScene(
   "set-time-zone",
   async (ctx) => {
     await ctx.reply(
-      "Select your current Time zone. If you don't know it, visit: http://www.csgnetwork.com/directdetecttimezonelist.html\n\nor type 'cancel' to leave",
+      "Send your current Time zone like <b>+00:00</b>. If you don't know it, visit: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\n\nor type 'cancel' to leave",
       {
         parse_mode: "HTML",
-        ...Markup.inlineKeyboard(
-          Array.from(new Set(timezones.default.map((el) => el.utc))).reduce(
-            (arr, nextEl, index) => {
-              const arrIndex = parseInt(index / 5);
-
-              arr[arrIndex] = arr[arrIndex] || [];
-              arr[arrIndex].push(
-                Markup.button.callback(nextEl, "selectTimeZone")
-              );
-
-              return [...arr];
-            },
-            []
-          )
-        ),
       }
     );
 
     return ctx.wizard.next();
   },
-  stepHandler,
   async (ctx) => {
     const selectedTz = (await ctx?.message?.text) || "";
 
@@ -43,11 +20,24 @@ const setTimeZoneWizard = new Scenes.WizardScene(
       await ctx.reply("Canceled");
 
       return ctx.scene.leave();
-    } else {
-      await ctx.reply("Time zone is incorrect, plase use the keyboard");
-      ctx.wizard.back();
-      return ctx.wizard.steps[ctx.wizard.cursor](ctx);
     }
+
+    if (selectedTz.match(/^(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$/)) {
+      ctx.session.settings.tz = selectedTz;
+      await ctx.reply(`Done!`);
+      settings(ctx);
+
+      return await ctx.scene.leave();
+    }
+
+    await ctx.reply("Time zone is incorrect");
+
+    return ctx.reply(
+      "Send your current Time zone like <b>+00:00</b>. If you don't know it, visit: http://www.csgnetwork.com/directdetecttimezonelist.html\n\nor type 'cancel' to leave",
+      {
+        parse_mode: "HTML",
+      }
+    );
   }
 );
 
