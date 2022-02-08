@@ -83,7 +83,7 @@ const fetchAllBinanceWorkerDatas = async (binancePools = [], tz) => {
   await getAllBinancePoolData(
     binancePools.map(
       (el) =>
-        `https://pool.binance.com/mining-api/v1/public/pool/miner/index?groupId=-2&observerToken=${el}&pageIndex=1&searchWorkerName=&sort=0&sortColumn=1&workerStatus=0&pageSize=20`
+        `https://pool.binance.com/mining-api/v1/public/pool/miner/index?groupId=-2&observerToken=${el}&pageIndex=1&searchWorkerName=&sort=0&sortColumn=1&workerStatus=0&pageSize=100`
     )
   )
     .then((resp) => {

@@ -90,7 +90,7 @@ const xmr = async (ctx) => {
 
   ctx.deleteMessage(message_id);
   return await ctx.reply(
-    `<b>XMR Pool</b>\n${avaiablePools.join("\n=====================\n")}`,
+    `<b>XMR Pool</b>\n\n${avaiablePools.join("\n=====================\n\n")}`,
     inlineButtonConfig
   );
 };

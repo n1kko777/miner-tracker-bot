@@ -1,9 +1,19 @@
 const { Scenes } = require("telegraf");
+const moment = require("moment");
+const schedule = require("node-schedule");
+
+const { getAllBinancePoolData, getAllXmrPoolData } = require("../utils");
 const { settings } = require("../commands/settings");
+
+let notificationJob = null;
 
 const switchNotificationsWizard = new Scenes.WizardScene(
   "switch-notifications",
   async (ctx) => {
+    if (notificationJob !== null) {
+      notificationJob.cancel();
+    }
+
     await ctx.reply(
       "How often do I need to check the workers? Send value in minutes.\n\nor type 'cancel' to leave",
       {
@@ -26,7 +36,94 @@ const switchNotificationsWizard = new Scenes.WizardScene(
       !Number.isNaN(targetMinutes.replace(/[^\d]/g, "")) &&
       targetMinutes.replace(/[^\d]/g, "") > 0
     ) {
-      ctx.session.settings.notification = targetMinutes.replace(/[^\d]/g, "");
+      const formatedValue = targetMinutes.replace(/[^\d]/g, "");
+      ctx.session.settings.notification = formatedValue;
+
+      notificationJob = schedule.scheduleJob(
+        `*/${ctx.session.settings.notification} * * * *`,
+        async () => {
+          if (ctx.session.settings.notification === null) {
+            notificationJob.cancel();
+            return;
+          }
+
+          await getAllBinancePoolData(
+            ((await ctx?.session?.binance) || []).map(
+              (el) =>
+                `https://pool.binance.com/mining-api/v1/public/pool/miner/index?groupId=-2&observerToken=${el}&pageIndex=1&searchWorkerName=&sort=0&sortColumn=1&workerStatus=0&pageSize=100`
+            )
+          )
+            .then((resp) => {
+              resp
+                .filter((el) => el.success)
+                .forEach(({ data: { workerDatas } }) => {
+                  workerDatas.forEach(
+                    async ({ status, workerName, lastShareTime }) => {
+                      if (
+                        status == 2 &&
+                        moment().isBetween(
+                          moment(new Date(lastShareTime)),
+                          moment(moment(new Date(lastShareTime))).add(
+                            ctx.session.settings.notification * 3,
+                            "minutes"
+                          )
+                        )
+                      ) {
+                        await ctx.reply(
+                          `${workerName} in Binance pool is inactive more than ${moment().diff(
+                            moment(new Date(lastShareTime)),
+                            "minutes"
+                          )} min.`
+                        );
+                      }
+                    }
+                  );
+                });
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+
+          await getAllXmrPoolData(
+            ((await ctx?.session?.xmr) || []).map(
+              (el) => `https://web.xmrpool.eu:8119/stats_address?address=${el}`
+            )
+          )
+            .then((resp) => {
+              resp
+                .filter((el) => el.success)
+                .forEach(({ data }) => {
+                  data.perWorkerStats.forEach(
+                    async ({ workerId, hashrate, lastShare }) => {
+                      if (
+                        !hashrate &&
+                        moment().isBetween(
+                          moment(new Date(parseInt(lastShare) * 1000)),
+                          moment(
+                            moment(new Date(parseInt(lastShare) * 1000))
+                          ).add(
+                            ctx.session.settings.notification * 3,
+                            "minutes"
+                          )
+                        )
+                      ) {
+                        await ctx.reply(
+                          `${workerId} in Xmr pool is inactive more than ${moment().diff(
+                            moment(new Date(parseInt(lastShare) * 1000)),
+                            "minutes"
+                          )} min.`
+                        );
+                      }
+                    }
+                  );
+                });
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      );
+
       await ctx.reply(`Done!`);
       settings(ctx);
 
@@ -49,6 +146,7 @@ const switchNotificationsWizard = new Scenes.WizardScene(
 const switchNotifications = async (ctx) => {
   await ctx.answerCbQuery();
   if (ctx.session.settings.notification) {
+    notificationJob?.cancel();
     ctx.session.settings.notification = null;
     await ctx.reply(`Done!`);
     return settings(ctx);
