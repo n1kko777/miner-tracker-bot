@@ -61,7 +61,7 @@ const fetchAllXmrWorkerDatas = async (xmrPools = [], tz) => {
 Hash Rate: ${hashrate || "0 H"}/s
 Last share time: ${
                 lastShare
-                  ? moment(new Date(parseInt(lastShare) * 1000)).zone(tz)
+                  ? moment(new Date(parseInt(lastShare) * 1000)).utcOffset(tz)
                   : "Never"
               }`);
             }

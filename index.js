@@ -17,12 +17,14 @@ const initialize = async () => {
   ).db();
   const bot = setup(db);
 
-  bot.launch({
-    webhook: {
-      domain: `${URL}/bot${BOT_TOKEN}`,
-      port: PORT,
-    },
-  });
+  bot.launch(
+    process.env.NODE_ENV !== "development" ?? {
+      webhook: {
+        domain: `${URL}/bot${BOT_TOKEN}`,
+        port: PORT,
+      },
+    }
+  );
 
   // Enable graceful stop
   process.once("SIGINT", () => bot.stop("SIGINT"));

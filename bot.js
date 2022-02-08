@@ -20,6 +20,10 @@ const {
 } = require("./actions/removeXmrPool");
 const { dashboard } = require("./commands/dashboard");
 const { setTimeZone, setTimeZoneWizard } = require("./actions/setTimeZone");
+const {
+  switchNotifications,
+  switchNotificationsWizard,
+} = require("./actions/switchNotifications");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -39,13 +43,14 @@ const setup = (db) => {
     addXmrPoolWizard,
     removeXmrPoolWizard,
     setTimeZoneWizard,
+    switchNotificationsWizard,
   ]);
 
   bot.use(stage.middleware());
   bot.use(Telegraf.log());
 
   bot.start(start);
-  bot.hears("Help", help);
+  bot.hears("Help", start);
   bot.hears("Binance Pool", binance);
   bot.hears("XMR Pool", xmr);
   bot.hears("Dashboard", dashboard);
@@ -63,6 +68,7 @@ const setup = (db) => {
   bot.action("updateDashboard", dashboard);
 
   bot.action("setTimeZone", setTimeZone);
+  bot.action("switchNotifications", switchNotifications);
 
   return bot;
 };

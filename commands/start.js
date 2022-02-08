@@ -7,6 +7,7 @@ const start = async (ctx) => {
     ctx.session.xmr = [];
     ctx.session.settings = {
       tz: "+00:00",
+      notification: null,
     };
   }
 

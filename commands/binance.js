@@ -95,7 +95,7 @@ const fetchAllBinanceWorkerDatas = async (binancePools = [], tz) => {
               avaiablePools.push(`\n${signal[status]} <b>${workerName}</b>
 Real-Hashrate: ${formatHash(parseFloat(hashRate))}
 Day-Hashrate: ${formatHash(parseFloat(dayHashRate))}
-Last share time: ${moment(new Date(lastShareTime)).zone(tz)}`);
+Last share time: ${moment(new Date(lastShareTime)).utcOffset(tz)}`);
             }
           );
         });
