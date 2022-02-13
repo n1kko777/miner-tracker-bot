@@ -15,6 +15,13 @@ const switchNotificationsWizard = new Scenes.WizardScene(
     }
 
     await ctx.reply(
+      "<b>FAQ</b>\n\nBot will track your workers every <b>N</b> minutes. After 3 period of <b>N</b> minutes bot will not notified about stopped workers.",
+      {
+        parse_mode: "HTML",
+      }
+    );
+
+    await ctx.reply(
       "How often do I need to check the workers? Send value in minutes.\n\nor type 'cancel' to leave",
       {
         parse_mode: "HTML",
@@ -70,10 +77,10 @@ const switchNotificationsWizard = new Scenes.WizardScene(
                         )
                       ) {
                         await ctx.reply(
-                          `${workerName} in Binance pool is inactive more than ${moment().diff(
+                          `<b>${workerName}</b> in <b>Binance pool</b> is inactive more than <b>${moment().diff(
                             moment(new Date(lastShareTime)),
                             "minutes"
-                          )} min.`
+                          )} min.</b>`
                         );
                       }
                     }
@@ -108,10 +115,10 @@ const switchNotificationsWizard = new Scenes.WizardScene(
                         )
                       ) {
                         await ctx.reply(
-                          `${workerId} in Xmr pool is inactive more than ${moment().diff(
+                          `<b>${workerId}</b> in <b>Xmr pool</b> is inactive more than <b>${moment().diff(
                             moment(new Date(parseInt(lastShare) * 1000)),
                             "minutes"
-                          )} min.`
+                          )} min.</b>`
                         );
                       }
                     }
