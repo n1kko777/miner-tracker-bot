@@ -2,7 +2,7 @@ const { Markup } = require("telegraf");
 
 const start = async (ctx) => {
   if (!ctx.session.bio) {
-    ctx.session.bio = ctx.message.from;
+    ctx.session.bio = { ...ctx.message.from, payer_email: null };
     ctx.session.binance = [];
     ctx.session.xmr = [];
     ctx.session.settings = {
