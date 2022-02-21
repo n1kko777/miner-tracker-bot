@@ -8,6 +8,7 @@ const inlineButtonConfig = {
     [Markup.button.callback("Update", "updateBinancePool")],
     [Markup.button.callback("Add Pool", "addBinancePool")],
     [Markup.button.callback("Remove Pool", "removeBinancePool")],
+    [Markup.button.url("View in browser", "pool.binance.com")],
   ]),
 };
 

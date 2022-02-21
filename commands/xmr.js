@@ -8,6 +8,7 @@ const inlineButtonConfig = {
     [Markup.button.callback("Update", "updateXmrPool")],
     [Markup.button.callback("Add Pool", "addXmrPool")],
     [Markup.button.callback("Remove Pool", "removeXmrPool")],
+    [Markup.button.url("View in browser", "web.xmrpool.eu")],
   ]),
 };
 
