@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const schedule = require("node-schedule");
+
 const { MongoClient } = require("mongodb");
 const { setup } = require("./bot");
 
@@ -23,17 +25,18 @@ const initialize = async () => {
     bot.telegram.sendMessage(ADMIN_ID, `Error executing a command: ${error}`);
   });
 
-  bot.launch(
-    process.env.NODE_ENV !== "development" ?? {
-      webhook: {
-        domain: `${URL}/bot${BOT_TOKEN}`,
-        port: PORT,
-      },
-    }
-  );
+  bot.launch({
+    webhook: {
+      domain: `${URL}/bot${BOT_TOKEN}`,
+      port: PORT,
+    },
+  });
 
   // Enable graceful stop
-  process.once("SIGINT", () => bot.stop("SIGINT"));
+  process.once("SIGINT", () => {
+    schedule.gracefulShutdown();
+    return bot.stop("SIGINT");
+  });
   process.once("SIGTERM", () => bot.stop("SIGTERM"));
 };
 
