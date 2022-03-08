@@ -5,10 +5,7 @@ const schedule = require("node-schedule");
 const { MongoClient } = require("mongodb");
 const { setup } = require("./bot");
 
-const URL = process.env.URL || "";
-const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
-const BOT_TOKEN = process.env.BOT_TOKEN;
 const ADMIN_ID = process.env.ADMIN_ID;
 
 const initialize = async () => {
@@ -25,16 +22,7 @@ const initialize = async () => {
     bot.telegram.sendMessage(ADMIN_ID, `Error executing a command: ${error}`);
   });
 
-  bot
-    .launch({
-      webhook: {
-        domain: URL,
-        port: PORT,
-      },
-    })
-    .then(() => {
-      console.log(`bot launch: ${URL}/${PORT}`);
-    });
+  bot.launch();
 
   // Enable graceful stop
   process.once("SIGINT", () => {
