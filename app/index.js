@@ -1,10 +1,11 @@
 require("dotenv").config();
-
-const schedule = require("node-schedule");
+const fastify = require("fastify");
 
 const { MongoClient } = require("mongodb");
 const { setup } = require("./bot");
 
+const PORT = process.env.PORT;
+const WEBHOOK_URL = process.env.URL;
 const MONGODB_URI = process.env.MONGODB_URI;
 const ADMIN_ID = process.env.ADMIN_ID;
 
@@ -15,21 +16,25 @@ const initialize = async () => {
       useUnifiedTopology: true,
     })
   ).db();
+
   const bot = setup(db);
+  const app = fastify();
+
+  const SECRET_PATH = `/telegraf/${bot.secretPathComponent()}`;
+  app.post(SECRET_PATH, (req, rep) => bot.handleUpdate(req.body, rep.raw));
 
   bot.catch((error) => {
     console.log("error", error);
     bot.telegram.sendMessage(ADMIN_ID, `Error executing a command: ${error}`);
   });
 
-  bot.launch();
-
-  // Enable graceful stop
-  process.once("SIGINT", () => {
-    schedule.gracefulShutdown();
-    return bot.stop("SIGINT");
+  bot.telegram.setWebhook(WEBHOOK_URL + SECRET_PATH).then(() => {
+    console.log("Webhook is set on", WEBHOOK_URL);
   });
-  process.once("SIGTERM", () => bot.stop("SIGTERM"));
+
+  app.listen(PORT).then(() => {
+    console.log("Listening on port", PORT);
+  });
 };
 
 initialize();
