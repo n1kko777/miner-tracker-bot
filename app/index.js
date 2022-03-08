@@ -25,16 +25,16 @@ const initialize = async () => {
     bot.telegram.sendMessage(ADMIN_ID, `Error executing a command: ${error}`);
   });
 
-  if (URL && URL !== "") {
-    bot.launch({
+  bot
+    .launch({
       webhook: {
-        domain: `${URL}/bot${BOT_TOKEN}`,
+        domain: URL,
         port: PORT,
       },
+    })
+    .then(() => {
+      console.log(`bot launch: ${URL}/${PORT}`);
     });
-  } else {
-    bot.launch();
-  }
 
   // Enable graceful stop
   process.once("SIGINT", () => {
