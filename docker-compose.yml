@@ -3,7 +3,11 @@ version: "3"
 services:
   minerbot:
     container_name: minerbot
-    build: ./app
+    expose:
+      - 3000
+    build:
+      context: ./app
+      dockerfile: Dockerfile
     env_file: .env
     restart: unless-stopped
 
