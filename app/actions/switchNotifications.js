@@ -153,21 +153,19 @@ const switchNotificationsWizard = new Scenes.WizardScene(
                 .forEach(({ data: { workerDatas } }) => {
                   workerDatas.forEach(
                     async ({ status, workerName, lastShareTime }) => {
+                      const diffMinBinance =
+                        moment().diff(
+                          moment(new Date(lastShareTime)),
+                          "minutes"
+                        ) || 0;
+
                       if (
                         status == 2 &&
-                        moment().isBetween(
-                          moment(new Date(lastShareTime)),
-                          moment(moment(new Date(lastShareTime))).add(
-                            ctx.session.settings.notification * 3,
-                            "minutes"
-                          )
-                        )
+                        diffMinBinance > ctx.session.settings.notification &&
+                        diffMinBinance < ctx.session.settings.notification * 3
                       ) {
                         await ctx.reply(
-                          `<b>${workerName}</b> in <b>Binance pool</b> is inactive more than <b>${moment().diff(
-                            moment(new Date(lastShareTime)),
-                            "minutes"
-                          )} min.</b>`,
+                          `<b>${workerName}</b> in <b>Binance pool</b> is inactive more than <b>${diffMinBinance} min.</b>`,
                           {
                             parse_mode: "HTML",
                           }
@@ -192,23 +190,19 @@ const switchNotificationsWizard = new Scenes.WizardScene(
                 .forEach(({ data }) => {
                   data.perWorkerStats.forEach(
                     async ({ workerId, hashrate, lastShare }) => {
+                      const diffMinXmr =
+                        moment().diff(
+                          moment(new Date(parseInt(lastShare) * 1000)),
+                          "minutes"
+                        ) || 0;
+
                       if (
                         !hashrate &&
-                        moment().isBetween(
-                          moment(new Date(parseInt(lastShare) * 1000)),
-                          moment(
-                            moment(new Date(parseInt(lastShare) * 1000))
-                          ).add(
-                            ctx.session.settings.notification * 3,
-                            "minutes"
-                          )
-                        )
+                        diffMinXmr > ctx.session.settings.notification &&
+                        diffMinXmr < ctx.session.settings.notification * 3
                       ) {
                         await ctx.reply(
-                          `<b>${workerId}</b> in <b>Xmr pool</b> is inactive more than <b>${moment().diff(
-                            moment(new Date(parseInt(lastShare) * 1000)),
-                            "minutes"
-                          )} min.</b>`,
+                          `<b>${workerId}</b> in <b>Xmr pool</b> is inactive more than <b>${diffMinXmr} min.</b>`,
                           {
                             parse_mode: "HTML",
                           }
