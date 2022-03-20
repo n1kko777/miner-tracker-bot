@@ -1,0 +1,19 @@
+{
+  "name": "miner-tracker-admin",
+  "version": "1.0.0",
+  "description": "Binance & Xmr Pool tracker",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start:dev": "nodemon index.js"
+  },
+  "author": "n1kko777",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.27.3",
+    "fastify-static": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

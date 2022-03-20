@@ -3,10 +3,18 @@ version: "3"
 services:
   minerbot:
     container_name: minerbot
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: unless-stopped
+
+  minerfastify:
+    container_name: minerfastify
     expose:
       - 3000
     build:
-      context: ./app
+      context: ./server
       dockerfile: Dockerfile
     env_file: .env
     restart: unless-stopped
@@ -16,12 +24,14 @@ services:
     restart: always
     container_name: minerbot-nginx
     env_file: .env
+    ports:
+      - 80:80
     environment:
       - VIRTUAL_HOST=${URL}
       - LETSENCRYPT_HOST=${URL}
       - LETSENCRYPT_EMAIL=${EMAIL_HOST_USER}
     depends_on:
-      - minerbot
+      - minerfastify
 
 networks:
   default:
