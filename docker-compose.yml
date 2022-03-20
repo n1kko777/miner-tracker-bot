@@ -24,8 +24,6 @@ services:
     restart: always
     container_name: minerbot-nginx
     env_file: .env
-    ports:
-      - 80:80
     environment:
       - VIRTUAL_HOST=${URL}
       - LETSENCRYPT_HOST=${URL}
