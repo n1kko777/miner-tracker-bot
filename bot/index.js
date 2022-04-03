@@ -1,3 +1,4 @@
+const path = require("path");
 const fastify = require("fastify");
 const { MongoClient } = require("mongodb");
 const { setup } = require("./bot");
