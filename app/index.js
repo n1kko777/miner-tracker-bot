@@ -10,11 +10,18 @@ if (!WEBHOOK_URL) throw new Error('"WEBHOOK_URL" env var is required!');
 if (!BOT_TOKEN) throw new Error('"BOT_TOKEN" env var is required!');
 
 const initialize = async () => {
-  const app = fastify();
+  const app = fastify({ logger: true });
 
   app.register(require("fastify-static"), {
     root: path.join(__dirname, "./static"),
   });
+
+  app.register(require("fastify-mongodb"), {
+    forceClose: true,
+    url: MONGODB_URI,
+  });
+
+  app.register(require("./routes/users"));
 
   const db = (
     await MongoClient.connect(MONGODB_URI, {
