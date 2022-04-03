@@ -6,7 +6,7 @@ services:
     expose:
       - 3000
     build:
-      context: ./bot
+      context: ./app
       dockerfile: Dockerfile
     env_file: .env
     restart: unless-stopped
