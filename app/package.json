@@ -5,28 +5,23 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "start:dev": "concurrently \"lt --port 3000 --subdomain n1kko777\" \"nodemon index.js\""
+    "start:dev": "nodemon index.js"
   },
   "author": "n1kko777",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
     "dateformat": "^4.5.1",
-    "dotenv": "^10.0.0",
-    "fastify": "^3.27.3",
-    "fastify-static": "^4.5.0",
+    "fastify": "^3.27.4",
+    "fastify-static": "^4.6.1",
     "moment": "^2.29.1",
     "mongodb": "^3.6.10",
     "node-schedule": "^2.1.0",
-    "nodemon": "^2.0.12",
     "telegraf": "^4.4.1",
     "telegraf-session-mongodb": "^2.0.2"
   },
-  "engines": {
-    "node": "15.x"
-  },
   "devDependencies": {
-    "concurrently": "^7.0.0",
-    "localtunnel": "^2.0.2"
+    "jshint": "^2.13.4",
+    "nodemon": "^2.0.15"
   }
 }

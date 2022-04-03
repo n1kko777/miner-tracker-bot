@@ -6,7 +6,8 @@ main {
 }
 
 .bot-chat {
-  background: #dfe6ee url(../images/chat_bg_telegram.jpg) no-repeat top center;
+  background: #dfe6ee url(../images/chat_bg_telegram.jpeg) no-repeat
+    center/cover;
   border-radius: 0.25rem;
   font-size: 80%;
   padding: 1.5rem 1.5rem 0.75rem;
