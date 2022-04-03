@@ -3,18 +3,10 @@ version: "3"
 services:
   minerbot:
     container_name: minerbot
-    build:
-      context: ./bot
-      dockerfile: Dockerfile
-    env_file: .env
-    restart: unless-stopped
-
-  minerfastify:
-    container_name: minerfastify
     expose:
       - 3000
     build:
-      context: ./server
+      context: ./bot
       dockerfile: Dockerfile
     env_file: .env
     restart: unless-stopped
@@ -29,7 +21,7 @@ services:
       - LETSENCRYPT_HOST=${URL}
       - LETSENCRYPT_EMAIL=${EMAIL_HOST_USER}
     depends_on:
-      - minerfastify
+      - minerbot
 
 networks:
   default:
