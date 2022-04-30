@@ -16,13 +16,6 @@ const initialize = async () => {
     root: path.join(__dirname, "./static"),
   });
 
-  app.register(require("fastify-mongodb"), {
-    forceClose: true,
-    url: MONGODB_URI,
-  });
-
-  app.register(require("./routes/users"));
-
   const db = (
     await MongoClient.connect(MONGODB_URI, {
       useNewUrlParser: true,

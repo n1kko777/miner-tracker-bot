@@ -1,4 +1,5 @@
 const { Markup } = require("telegraf");
+const { ADMIN_ID } = process.env;
 
 const start = async (ctx) => {
   if (!ctx.session.bio) {
@@ -11,6 +12,16 @@ const start = async (ctx) => {
     };
   }
 
+  const keyboard = [
+    ["Dashboard"],
+    ["Binance Pool", "XMR Pool"],
+    ["Settings", "Help"],
+  ];
+
+  if (ctx.message.from.id.toString() === ADMIN_ID.toString()) {
+    keyboard.push(["Statistics"]);
+  }
+
   return await ctx.reply(
     `Bot help you track your mining Binance and Xmr pool.
 
@@ -19,11 +30,7 @@ https://accounts.binance.com/ru/register?ref=BYJ46M9G
 
 Buy me a coffee:
 https://www.buymeacoffee.com/n1kko777`,
-    Markup.keyboard([
-      ["Dashboard"],
-      ["Binance Pool", "XMR Pool"],
-      ["Settings", "Help"],
-    ]).resize()
+    Markup.keyboard(keyboard).resize()
   );
 };
 

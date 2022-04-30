@@ -19,6 +19,7 @@ const {
   removeXmrPoolWizard,
 } = require("./actions/removeXmrPool");
 const { dashboard } = require("./commands/dashboard");
+const { statistics } = require("./commands/statistics");
 const { setTimeZone, setTimeZoneWizard } = require("./actions/setTimeZone");
 const {
   switchNotifications,
@@ -55,6 +56,7 @@ const setup = (db) => {
   bot.hears("XMR Pool", xmr);
   bot.hears("Dashboard", dashboard);
   bot.hears("Settings", settings);
+  bot.hears("Statistics", statistics);
 
   // actions
   bot.action("addBinancePool", addBinancePool);
