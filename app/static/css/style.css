@@ -55,3 +55,10 @@ div.bot-chat-sm p {
 .bot-commands dd {
   color: #999;
 }
+
+@media screen and (max-width: 768px) {
+  .bot-commands dt,
+  .bot-commands dd {
+    width: 100%;
+  }
+}
