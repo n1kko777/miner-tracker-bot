@@ -1,5 +1,3 @@
-const ObjectID = require("mongodb").ObjectID;
-
 const COLLECTION_NAME = "sessions";
 
 async function listUsers(req, reply) {
@@ -15,7 +13,9 @@ async function listUsers(req, reply) {
 async function getUser(req, reply) {
   try {
     const users = this.mongo.db.collection(COLLECTION_NAME);
-    const result = await users.findOne({ _id: new ObjectID(req.params.id) });
+    const result = await users.findOne({
+      "data.bio.id": Number(req.params.id),
+    });
 
     if (result) {
       return reply.code(200).send(result);
@@ -30,7 +30,7 @@ async function getUser(req, reply) {
 async function updateUser(req, reply) {
   try {
     const users = this.mongo.db.collection(COLLECTION_NAME);
-    const user = await users.findOne({ _id: new ObjectID(req.params.id) });
+    const user = await users.findOne({ "data.bio.id": Number(req.params.id) });
 
     const { payer_email, tz, notification, binance, xmr } = req.body;
     const updateDoc = {
@@ -44,7 +44,7 @@ async function updateUser(req, reply) {
       },
     };
     const result = await users.updateOne(
-      { _id: ObjectID(req.params.id) },
+      { "data.bio.id": Number(req.params.id) },
       updateDoc,
       { upsert: true }
     );
@@ -59,7 +59,9 @@ async function updateUser(req, reply) {
 async function deleteUser(req, reply) {
   try {
     const users = this.mongo.db.collection(COLLECTION_NAME);
-    const result = await users.deleteOne({ _id: ObjectID(req.params.id) });
+    const result = await users.deleteOne({
+      "data.bio.id": Number(req.params.id),
+    });
     if (result.deletedCount) return reply.send("Deleted");
 
     reply.code(500).send("Could not delete.");
