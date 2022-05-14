@@ -25,6 +25,10 @@ const {
   switchNotifications,
   switchNotificationsWizard,
 } = require("./actions/switchNotifications");
+const {
+  updateSubscription,
+  updateSubscriptionWizard,
+} = require("./actions/updateSubscription");
 
 const token = process.env.BOT_TOKEN;
 if (token === undefined) {
@@ -45,6 +49,7 @@ const setup = (db) => {
     removeXmrPoolWizard,
     setTimeZoneWizard,
     switchNotificationsWizard,
+    updateSubscriptionWizard,
   ]);
 
   bot.use(stage.middleware());
@@ -71,6 +76,8 @@ const setup = (db) => {
 
   bot.action("setTimeZone", setTimeZone);
   bot.action("switchNotifications", switchNotifications);
+
+  bot.action("updateSubscription", updateSubscription);
 
   return bot;
 };
