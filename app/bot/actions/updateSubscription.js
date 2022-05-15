@@ -1,6 +1,7 @@
+const axios = require("axios");
 const { Scenes } = require("telegraf");
 const { statistics } = require("../commands/statistics");
-const { ADMIN_ID } = process.env;
+const { ADMIN_ID, URL } = process.env;
 
 const updateSubscriptionWizard = new Scenes.WizardScene(
   "update-subscription",
@@ -30,7 +31,9 @@ const updateSubscriptionWizard = new Scenes.WizardScene(
 
     const { message_id } = await ctx.reply("Checking for user...");
 
-    // TODO: Fastify API
+    const { data: user } = await axios.get(
+      `https://${URL}/users/${targetUserId}`
+    );
 
     await ctx.deleteMessage(message_id);
 
@@ -67,11 +70,16 @@ const updateSubscriptionWizard = new Scenes.WizardScene(
 
     const { message_id } = await ctx.reply("Updating data...");
 
-    // TODO: Fastify API
+    const result = await axios.put(
+      `https://${URL}/users/${ctx.scene.state.targetUserId}`,
+      {
+        payer_email: targetEmail,
+      }
+    );
 
     await ctx.deleteMessage(message_id);
 
-    if (!result || result.modifiedCount === 0) {
+    if (result?.status !== 200) {
       await ctx.reply("Can't update! Please try again");
       return ctx.reply(
         "Send user payment email or send <b>0</b> to cancel subscription\n\nor type 'cancel' to leave",

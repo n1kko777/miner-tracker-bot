@@ -1,5 +1,6 @@
+const axios = require("axios");
 const { Markup } = require("telegraf");
-const { ADMIN_ID } = process.env;
+const { ADMIN_ID, URL } = process.env;
 
 const inlineButtonConfig = {
   parse_mode: "HTML",
@@ -15,7 +16,9 @@ const statistics = async (ctx) => {
 
   const { message_id } = await ctx.reply("Getting data...");
 
-  // TODO: Fastify API
+  const { data: result } = await axios.get(`https://${URL}/users`);
+
+  console.log("result", result);
 
   if (!result?.length) {
     await ctx.deleteMessage(message_id);

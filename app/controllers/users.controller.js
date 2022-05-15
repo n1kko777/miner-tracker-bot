@@ -35,7 +35,8 @@ async function updateUser(req, reply) {
     const { payer_email, tz, notification, binance, xmr } = req.body;
     const updateDoc = {
       $set: {
-        "data.bio.payer_email": payer_email || user.data.bio.payer_email,
+        "data.bio.payer_email":
+          payer_email !== undefined ? payer_email : user.data.bio.payer_email,
         "data.binance": binance || user.data.binance,
         "data.xmr": xmr || user.data.xmr,
         "data.settings.notification":
