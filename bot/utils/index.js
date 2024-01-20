@@ -39,7 +39,7 @@ const getAllXmrPoolData = (URLs) => {
 const formatHash = (a, b = 2, k = 1000) => {
   with (Math) {
     let d = floor(log(a) / log(k));
-    return 0 == a
+    return 0 == a || !a
       ? "0 Hash"
       : parseFloat((a / pow(k, d)).toFixed(max(0, b))) +
           " " +

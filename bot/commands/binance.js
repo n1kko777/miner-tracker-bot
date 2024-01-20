@@ -54,8 +54,8 @@ const fetchAllBinancePoolData = async (binancePools = []) => {
             });
 
             avaiablePools.push(`
-Real-Hashrate: ${formatHash(parseFloat(hashRate))}
-Day-Hashrate: ${formatHash(parseFloat(dayHashRate))}
+Real-Hashrate: ${formatHash(parseFloat(hashRate || "0"))}
+Day-Hashrate: ${formatHash(parseFloat(dayHashRate || "0"))}
 Active devices: ${validNum}
 Inactive devices: ${invalidNum}
 Profit Today: ${profitTodayText}
